@@ -17,15 +17,19 @@ class AWSMineCli < Thor
   def stop_instance
   end
 
+  # Handle minecraft server version here.
+  desc 'start-server', 'Starts a minecraft server.'
   def start_server
   end
 
   def stop_server
   end
 
-  def upload_world
+  def attach_to_server
   end
 
+  def upload_world
+  end
 end
 
 AWSMineCli.start

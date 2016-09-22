@@ -1,9 +1,13 @@
 require 'thor'
-require 'time'
 
 module AWSMine
   class AWSMine
     def initialize
+    end
+
+    private
+
+    def remote_exec
     end
 
     def color_shell
