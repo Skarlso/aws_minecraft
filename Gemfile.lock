@@ -14,6 +14,7 @@ GEM
       ast (~> 2.2)
     powerpack (0.1.1)
     rainbow (2.1.0)
+    rake (11.2.2)
     rspec (3.5.0)
       rspec-core (~> 3.5.0)
       rspec-expectations (~> 3.5.0)
@@ -42,9 +43,10 @@ PLATFORMS
 
 DEPENDENCIES
   aws-sdk (~> 2)
+  rake
   rspec
   rubocop
   thor
 
 BUNDLED WITH
-   1.12.5
+   1.13.1

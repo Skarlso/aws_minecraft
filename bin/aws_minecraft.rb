@@ -12,6 +12,7 @@ class AWSMineCli < Thor
 
   desc 'start-instance', 'Starts an EC2 instance.'
   def start_instance
+    @aws_mine.start_instance
   end
 
   def stop_instance

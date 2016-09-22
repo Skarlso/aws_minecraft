@@ -7,7 +7,8 @@ module AWSMine
     def initialize
       # region: AWS_REGION
       # Credentials are loaded from environment properties
-      @ec2_client = Aws::EC2::Client.new
+      credentials = Aws::SharedCredentials.new(profile_name: 'gergely')
+      @ec2_client = Aws::EC2::Client.new(credentials: credentials)
       @ec2_resource = Aws::EC2::Resource.new(client: @ec2_client)
     end
 
