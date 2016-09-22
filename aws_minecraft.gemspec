@@ -1,6 +1,6 @@
 # -*- encoding: utf-8 -*-
 
-require File.join(File.dirname(__FILE__), 'lib', 'aws_minecraft', 'version')
+require File.join(File.dirname(__FILE__), 'lib', 'aws_minecraft', 'version', 'cfg')
 
 Gem::Specification.new do |s|
   s.name = 'aws_minecraft'

@@ -1,0 +1,8 @@
+{
+    "DryRun": true,
+    "ImageId": "ami-dfc39aef",
+    "InstanceType": "t2.micro",
+    "Monitoring": {
+        "Enabled": true
+    }
+}
