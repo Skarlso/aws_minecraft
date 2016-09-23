@@ -1,8 +1,7 @@
 {
-    "DryRun": true,
-    "ImageId": "ami-dfc39aef",
-    "InstanceType": "t2.micro",
-    "Monitoring": {
-        "Enabled": true
-    }
+    "dry_run": true,
+    "image_id": "ami-ea26ce85",
+    "min_count": 1,
+    "max_count": 1,
+    "instance_type": "t2.micro"
 }
