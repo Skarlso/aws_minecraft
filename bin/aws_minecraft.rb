@@ -15,6 +15,7 @@ class AWSMineCli < Thor
     @aws_mine.start_instance
   end
 
+  desc 'stop-instance', 'Stops an EC2 instance.'
   def stop_instance
   end
 
@@ -23,12 +24,15 @@ class AWSMineCli < Thor
   def start_server
   end
 
+  desc 'stop-server', 'Stops a minecraft server.'
   def stop_server
   end
 
+  desc 'attach-to-server', 'Attach to a minecraft server.'
   def attach_to_server
   end
 
+  desc 'upload-world', 'Upload world.'
   def upload_world
   end
 end

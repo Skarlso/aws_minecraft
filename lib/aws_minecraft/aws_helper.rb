@@ -13,9 +13,8 @@ module AWSMine
     end
 
     def create_ec2(version)
-      config = File.read(File.join(__dir__, '../cfg/ec2_conf.json'),
-                         rb, &:read).chop
-      instance = @ec2_resource.create_instance(JSON.parse(config).to_hash)
+      config = File.open(File.join(__dir__, '../../cfg/ec2_conf.json'), 'rb', &:read).chop
+      instance = @ec2_resource.create_instances(JSON.parse(config).to_hash)
       @ec2_resource.client.wait_until(:instance_status_ok,
                                       instance_ids: [instance[0].id])
       instance.create_tags(tags: [{ key: 'Name', value: 'MinecraftServer' },

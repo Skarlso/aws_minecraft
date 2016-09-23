@@ -1,9 +1,10 @@
 require 'thor'
+require 'aws_minecraft/aws_helper'
 
 module AWSMine
   class AWSMine
     def initialize
-      @aws_helper = AWSMine::AWSHelper.new
+      @aws_helper = AWSHelper.new
     end
 
     def start_instance
