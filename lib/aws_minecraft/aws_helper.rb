@@ -18,6 +18,7 @@ module AWSMine
                          'rb', &:read).chop
       ec2_config = JSON.parse(config)
       ec2_config = symbolize(ec2_config)
+      import_keypair
       instance = @ec2_resource.create_instances(ec2_config)
       @ec2_resource.client.wait_until(:instance_status_ok,
                                       instance_ids: [instance[0].id])
@@ -49,6 +50,18 @@ module AWSMine
       else
         obj
       end
+    end
+
+    def import_keypair
+      key = File.open(File.join(__dir__,
+                                '../../cfg/gbrautigam.key'),
+                      'rb', &:read).chop
+      resp = @ec2_client.import_key_pair(dry_run: true, key_name: 'minecraft_keys',
+                                         public_key_material: key)
+      p resp
+    end
+
+    def generate_keypair(name)
     end
   end
 end
