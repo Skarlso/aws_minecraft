@@ -13,20 +13,12 @@ module AWSMine
     end
 
     def create_ec2(version)
-      config = File.open(File.join(__dir__, '../../cfg/ec2_conf.json'), 'rb', &:read).chop
+      config = File.open(File.join(__dir__,
+                                   '../../cfg/ec2_conf.json'),
+                         'rb', &:read).chop
       ec2_config = JSON.parse(config)
-      ec2_config = ec2_config.inject({}) do |m, (k, v)|
-        m[k.to_sym] = v
-        m
-      end
-      ec2_config[:monitoring] = { enabled: true }
-      p ec2_config
+      ec2_config = symbolize(ec2_config)
       instance = @ec2_resource.create_instances(ec2_config)
-      # instance = @ec2_resource.create_instances(dry_run: true,
-      #                                           image_id: 'ami-ea26ce85',
-      #                                           min_count: 1, max_count: 1,
-      #                                           instance_type: 't2.micro',
-      #                                           monitoring: { enabled: true })
       @ec2_resource.client.wait_until(:instance_status_ok,
                                       instance_ids: [instance[0].id])
       instance.create_tags(tags: [{ key: 'Name', value: 'MinecraftServer' },
@@ -42,6 +34,21 @@ module AWSMine
     end
 
     def instance_arn
+    end
+
+    private
+
+    def symbolize(obj)
+      case obj
+      when Hash
+        return obj.inject({}) do |memo, (k, v)|
+          memo.tap { |m| m[k.to_sym] = symbolize(v) }
+        end
+      when Array
+        return obj.map { |memo| symbolize(memo) }
+      else
+        obj
+      end
     end
   end
 end
