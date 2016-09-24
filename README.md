@@ -1,6 +1,6 @@
 # AWS Based Minecraft Server Provisioning
 
-- [ ] Create an EC2 instance
+- [x] Create an EC2 instance
 - [ ] Start that instance
 - [ ] Deploy a world from local to instance
 - [ ] Ability to SSH to the instance
