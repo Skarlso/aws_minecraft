@@ -35,6 +35,11 @@ class AWSMineCli < Thor
   desc 'upload-world', 'Upload world.'
   def upload_world
   end
+
+  desc 'init-db', 'Initialize the databse.'
+  def init_db
+    @aws_mine.init_db
+  end
 end
 
 AWSMineCli.start
