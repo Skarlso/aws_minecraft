@@ -10,7 +10,16 @@ module AWSMine
     end
 
     def start_instance
-      @aws_helper.create_ec2('1.9')
+      if @db_helper.instance_exists?
+        ip, id = @db.instance_details
+        puts 'Instance already exists.'
+        state = @aws_helper.state(id)
+        puts "State is: #{state}"
+        puts "Public ip; id: #{ip} | #{id}"
+        raise
+      end
+      ip, id = @aws_helper.create_ec2('1.9')
+      @db_helper.store_instance(ip, id)
     end
 
     def init_db

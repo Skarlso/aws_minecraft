@@ -18,18 +18,26 @@ module AWSMine
 
     def init_db
       @tables.each do |table|
-        sql = File.open(File.join(__dir__,
-                                  "../../cfg/#{table}.sql"),
+        sql = File.open(File.join(__dir__, "../../cfg/#{table}.sql"),
                         'rb', &:read).chop
         @db.execute sql unless table_exists? table
       end
     end
 
+    def instance_details
+      @db.execute('SELECT id, ip FROM instances;').first
+    end
+
     def instance_exists?
+      !@db.execute('SELECT id FROM instances;').empty?
     end
 
     def store_instance(ip, id)
       @db.execute "INSERT INTO instances VALUES ('#{ip}', '#{id}');"
+    end
+
+    def remove_instance
+      @db.execute 'DELETE FROM instances;'
     end
   end
 end

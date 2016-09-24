@@ -13,28 +13,30 @@ module AWSMine
     end
 
     def create_ec2(version)
-      config = File.open(File.join(__dir__,
-                                   '../../cfg/ec2_conf.json'),
+      config = File.open(File.join(__dir__, '../../cfg/ec2_conf.json'),
                          'rb', &:read).chop
       ec2_config = JSON.parse(config)
       ec2_config = symbolize(ec2_config)
       import_keypair
-      instance = @ec2_resource.create_instances(ec2_config)
+      instance = @ec2_resource.create_instances(ec2_config)[0]
       @ec2_resource.client.wait_until(:instance_status_ok,
-                                      instance_ids: [instance[0].id])
+                                      instance_ids: [instance.id])
       instance.create_tags(tags: [{ key: 'Name', value: 'MinecraftServer' },
                                   { key: 'Version', value: version }])
-      puts instance.id
-      puts instance.public_ip_address
+      [instance.public_ip_address, instance.id]
     end
 
     def terminate_ec2
     end
 
-    def instance_ip(tag)
+    def stop_ec2
     end
 
-    def instance_arn
+    def state(id)
+      resp = @ec2_client.describe_instances(dry_run: true,
+                                            instance_ids: id,
+                                            max_result: 1)
+      resp.reservations[0].instances[0].state.name
     end
 
     private
@@ -53,15 +55,12 @@ module AWSMine
     end
 
     def import_keypair
-      key = File.open(File.join(__dir__,
-                                '../../cfg/gbrautigam.key'),
+      key = File.open(File.join(__dir__, '../../cfg/gbrautigam.key'),
                       'rb', &:read).chop
-      resp = @ec2_client.import_key_pair(dry_run: true, key_name: 'minecraft_keys',
+      resp = @ec2_client.import_key_pair(dry_run: true,
+                                         key_name: 'minecraft_keys',
                                          public_key_material: key)
       p resp
-    end
-
-    def generate_keypair(name)
     end
   end
 end
