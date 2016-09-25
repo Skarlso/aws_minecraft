@@ -74,7 +74,7 @@ module AWSMine
     end
 
     def import_keypair
-      key = File.open(File.join(__dir__, '../../cfg/gbrautigam.key'),
+      key = File.open(File.join(__dir__, '../../cfg/minecraft.key'),
                       'rb', &:read).chop
       resp = @ec2_client.import_key_pair(dry_run: true,
                                          key_name: 'minecraft_keys',
