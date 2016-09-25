@@ -6,14 +6,15 @@ module AWSMine
   class DBHelper
     def initialize
       @db = SQLite3::Database.new 'minecraft.db'
-      @tables = %w(ec2_db)
+      @tables = %w(instances)
     end
 
     def table_exists?(table)
       retrieved = @db.execute <<-SQL
         SELECT name FROM sqlite_master WHERE type='table' AND name='#{table}';
       SQL
-      retrieved.first.first == table unless retrieved.nil? || retrieved.empty?
+      return false if retrieved.nil? || retrieved.empty?
+      retrieved.first.first == table
     end
 
     def init_db

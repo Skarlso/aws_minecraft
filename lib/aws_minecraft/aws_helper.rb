@@ -1,6 +1,7 @@
 require 'json'
 require 'aws-sdk'
 require 'logger'
+require_relative 'mine_config'
 
 module AWSMine
   # Main wrapper for AWS commands
@@ -8,12 +9,11 @@ module AWSMine
     def initialize
       # region: AWS_REGION
       # Credentials are loaded from environment properties
-      config = YAML.load_file(File.join(__dir__, '../../cfg/config.yaml'))
       credentials = Aws::SharedCredentials.new(profile_name: 'gergely')
       @ec2_client = Aws::EC2::Client.new(credentials: credentials)
       @ec2_resource = Aws::EC2::Resource.new(client: @ec2_client)
       @logger = Logger.new(STDOUT)
-      @logger.level = Logger.const_get(config['loglevel'])
+      @logger.level = Logger.const_get(MineConfig.new.loglevel)
     end
 
     def create_ec2(version)
