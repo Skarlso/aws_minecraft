@@ -7,6 +7,13 @@ Roadmap for aws_minecraft
 * Stopping minecraft server
 * Attaching to PID to see output and to run commands
 * Investiage tmux to run minecraft and attach to later (This would save a lot of trouble)
+* Use tmux like this:
+```bash
+# runs a tmux session and detaches from it
+tmux new -d -s minecraft 'java -jar minecraft_server.jar nogui'
+# can attach to the running session so that we can control minecraft
+tmux attach -t minecraft
+```
 
 0.0.3
 -----
