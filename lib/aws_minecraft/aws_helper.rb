@@ -1,5 +1,6 @@
 require 'json'
 require 'aws-sdk'
+require 'logger'
 
 module AWSMine
   # Main wrapper for AWS commands
@@ -7,22 +8,30 @@ module AWSMine
     def initialize
       # region: AWS_REGION
       # Credentials are loaded from environment properties
+      config = YAML.load_file(File.join(__dir__, '../../cfg/config.yaml'))
       credentials = Aws::SharedCredentials.new(profile_name: 'gergely')
       @ec2_client = Aws::EC2::Client.new(credentials: credentials)
       @ec2_resource = Aws::EC2::Resource.new(client: @ec2_client)
+      @logger = Logger.new(STDOUT)
+      @logger.level = Logger.const_get(config['loglevel'])
     end
 
     def create_ec2(version)
       config = File.open(File.join(__dir__, '../../cfg/ec2_conf.json'),
                          'rb', &:read).chop
+      @logger.debug("Configuration loaded: #{config}.")
       ec2_config = JSON.parse(config)
       ec2_config = symbolize(ec2_config)
+      @logger.debug("Configuration symbolized: #{ec2_config}.")
       import_keypair
+      @logger.debug('Keys imported.')
       instance = @ec2_resource.create_instances(ec2_config)[0]
       @ec2_resource.client.wait_until(:instance_status_ok,
                                       instance_ids: [instance.id])
       instance.create_tags(tags: [{ key: 'Name', value: 'MinecraftServer' },
                                   { key: 'Version', value: version }])
+      @logger.debug('Instance started with ip | id: ' \
+                    "#{instance.public_ip_address} | #{instance.id}")
       [instance.public_ip_address, instance.id]
     end
 
@@ -36,7 +45,17 @@ module AWSMine
       resp = @ec2_client.describe_instances(dry_run: true,
                                             instance_ids: id,
                                             max_result: 1)
+      @logger.debug("Response from describe_instances: #{resp}.")
       resp.reservations[0].instances[0].state.name
+    end
+
+    def remote_exec(host, cmd)
+      @logger.debug("Executing '#{cmd}' on '#{host}'")
+      # This should work if ssh key is loaded and AgentFrowarding is set to yes.
+      Net::SSH.start(host, 'ec2-user') do |ssh|
+        output = ssh.exec!(cmd)
+        @logger.info output
+      end
     end
 
     private
