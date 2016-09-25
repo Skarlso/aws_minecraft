@@ -23,8 +23,15 @@ module AWSMine
         @logger.info "Public ip | id: #{ip} | #{id}"
         raise
       end
-      ip, id = @aws_helper.create_ec2('1.9')
+      ip, id = @aws_helper.create_ec2
       @db_helper.store_instance(ip, id)
+    end
+
+    def terminate_instance
+      ip, id = @db_helper.instance_details
+      @logger.info("Terminating instance #{ip} | #{id}.")
+      @aws_helper.terminate_ec2(id)
+      @db_helper.remove_instance
     end
 
     def init_db
@@ -34,8 +41,14 @@ module AWSMine
     end
 
     def remote_exec(cmd)
-      ip, = @db.instance_details
+      ip, = @db_helper.instance_details
+      @logger.info("SSH-ing into: #{ip}.")
       @aws_helper.remote_exec(ip, cmd)
+    end
+
+    def ssh
+      ip, = @db_helper.instance_details
+      exec("ssh ec2-user@#{ip}")
     end
   end
 end

@@ -19,6 +19,12 @@ class AWSMineCli < Thor
   def stop_instance
   end
 
+  desc 'ssh', 'SSH into a running EC2 instance.'
+  def ssh
+    # @aws_mine.remote_exec('ls -l')
+    @aws_mine.ssh
+  end
+
   # Handle minecraft server version here.
   desc 'start-server', 'Starts a minecraft server.'
   def start_server

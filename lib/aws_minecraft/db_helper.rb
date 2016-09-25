@@ -26,7 +26,7 @@ module AWSMine
     end
 
     def instance_details
-      @db.execute('SELECT id, ip FROM instances;').first
+      @db.execute('SELECT ip, id FROM instances;').first
     end
 
     def instance_exists?
