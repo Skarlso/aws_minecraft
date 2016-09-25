@@ -1,9 +1,9 @@
 {
-    "dry_run": true,
+    "dry_run": false,
     "image_id": "ami-ea26ce85",
     "min_count": 1,
     "max_count": 1,
-    "instance_type": "t2.micro",
+    "instance_type": "t2.nano",
     "monitoring": {
         "enabled": true
     }

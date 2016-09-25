@@ -1,8 +1,8 @@
 require 'sqlite3'
-# Initializes the database. The format to use if there are more tables
-# is simple. Just create a SQL file corresponding to the table name
-# and add that table to the @tables instance variable.
 module AWSMine
+  # Initializes the database. The format to use if there are more tables
+  # is simple. Just create a SQL file corresponding to the table name
+  # and add that table to the @tables instance variable.
   class DBHelper
     def initialize
       @db = SQLite3::Database.new 'minecraft.db'
