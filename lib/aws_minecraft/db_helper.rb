@@ -37,6 +37,10 @@ module AWSMine
       @db.execute "INSERT INTO instances VALUES ('#{ip}', '#{id}');"
     end
 
+    def update_instance(ip, id)
+      @db.execute "UPDATE instances SET ip='#{ip}' WHERE id='#{id}';"
+    end
+
     def remove_instance
       @db.execute 'DELETE FROM instances;'
     end

@@ -9,11 +9,12 @@ module AWSMine
     def initialize
       # region: AWS_REGION
       # Credentials are loaded from environment properties
-      credentials = Aws::SharedCredentials.new(profile_name: 'gergely')
+      config = MineConfig.new
+      credentials = Aws::SharedCredentials.new(profile_name: config.profile)
       @ec2_client = Aws::EC2::Client.new(credentials: credentials)
       @ec2_resource = Aws::EC2::Resource.new(client: @ec2_client)
       @logger = Logger.new(STDOUT)
-      @logger.level = Logger.const_get(MineConfig.new.loglevel)
+      @logger.level = Logger.const_get(config.loglevel)
     end
 
     def create_ec2
@@ -23,38 +24,73 @@ module AWSMine
       @logger.debug("Configuration loaded: #{config}.")
       ec2_config = symbolize(JSON.parse(config))
       @logger.debug("Configuration symbolized: #{ec2_config}.")
+      @logger.info('Importing keys.')
       import_keypair
+      @logger.info('Creating security group.')
       sg_id = create_security_group
       ec2_config[:security_group_ids] = [sg_id]
-      @logger.debug('Keys imported.')
+      @logger.info('Creating instance.')
       instance = @ec2_resource.create_instances(ec2_config)[0]
+      @logger.info('Instance created. Waiting for it to become available.')
       @ec2_resource.client.wait_until(:instance_status_ok,
-                                      instance_ids: [instance.id])
-      # instance.create_tags(tags: [{ key: 'Name', value: 'MinecraftServer' },
-      #                             { key: 'Version', value: '1.9' }])
+                                      instance_ids: [instance.id]) do |w|
+        w.before_wait do |_, _|
+          @logger << '.'
+        end
+      end
+      @logger.info("\n")
+      @logger.info('Instance in running state.')
       pub_ip = @ec2_resource.instances(instance_ids: [instance.id]).first
       @logger.info('Instance started with ip | id: ' \
-                    "#{pub_ip.public_ip_address} | #{instance.id}")
+                    "#{pub_ip.public_ip_address} | #{instance.id}.")
       [pub_ip.public_ip_address, instance.id]
     end
 
     def terminate_ec2(id)
       @ec2_client.terminate_instances(dry_run: false, instance_ids: [id])
+      @ec2_resource.client.wait_until(:instance_terminated,
+                                      instance_ids: [id]) do |w|
+        w.before_wait do |_, _|
+          @logger << '.'
+        end
+      end
+      @logger.info("\n")
+      @logger.info('Instance terminated. Goodbye.')
     end
 
-    def stop_ec2
+    def stop_ec2(id)
+      @ec2_client.stop_instances(dry_run: false, instance_ids: [id])
+      @ec2_resource.client.wait_until(:instance_stopped,
+                                      instance_ids: [id]) do |w|
+        w.before_wait do |_, _|
+          @logger << '.'
+        end
+      end
+      @logger.info("\n")
+      @logger.info('Instance stopped. Goodbye.')
+    end
+
+    def start_ec2(id)
+      @ec2_client.start_instances(dry_run: false, instance_ids: [id])
+      @ec2_resource.client.wait_until(:instance_running,
+                                      instance_ids: [id]) do |w|
+        w.before_wait do |_, _|
+          @logger << '.'
+        end
+      end
+      pub_ip = @ec2_resource.instances(instance_ids: [id]).first
+      @logger.info("Instance started. New ip is:#{pub_ip.public_ip_address}.")
+      pub_ip.public_ip_address
     end
 
     def state(id)
-      resp = @ec2_client.describe_instances(dry_run: false,
-                                            instance_ids: id,
-                                            max_result: 1)
-      @logger.debug("Response from describe_instances: #{resp}.")
-      resp.reservations[0].instances[0].state.name
+      instance = @ec2_resource.instances(instance_ids: [id]).first
+      @logger.debug("Response from describe_instances: #{instance}.")
+      instance.state.name
     end
 
     def remote_exec(host, cmd)
-      @logger.debug("Executing '#{cmd}' on '#{host}'")
+      @logger.debug("Executing '#{cmd}' on '#{host}'.")
       # This should work if ssh key is loaded and AgentFrowarding is set to yes.
       Net::SSH.start(host, 'ec2-user') do |ssh|
         output = ssh.exec!(cmd)
@@ -90,7 +126,7 @@ module AWSMine
       resp = @ec2_client.import_key_pair(dry_run: false,
                                          key_name: 'minecraft_keys',
                                          public_key_material: key)
-      @logger.debug("Response from import_key_pair: #{resp}")
+      @logger.debug("Response from import_key_pair: #{resp}.")
     end
 
     def create_security_group

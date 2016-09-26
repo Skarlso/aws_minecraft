@@ -14,20 +14,45 @@ module AWSMine
       @logger.level = Logger.const_get(MineConfig.new.loglevel)
     end
 
-    def start_instance
+    def create_instance
       if @db_helper.instance_exists?
-        ip, id = @db.instance_details
+        ip, id = @db_helper.instance_details
         @logger.info 'Instance already exists.'
         state = @aws_helper.state(id)
         @logger.info "State is: #{state}"
         @logger.info "Public ip | id: #{ip} | #{id}"
-        raise
+        return
       end
       ip, id = @aws_helper.create_ec2
       @db_helper.store_instance(ip, id)
     end
 
+    def start_instance
+      unless @db_helper.instance_exists?
+        @logger.info 'No instances found. Nothing to do.'
+        return
+      end
+      ip, id = @db_helper.instance_details
+      @logger.info("Starting instance #{ip} | #{id}.")
+      new_ip = @aws_helper.start_ec2(id)
+      @db_helper.update_instance(new_ip, id)
+    end
+
+    def stop_instance
+      unless @db_helper.instance_exists?
+        @logger.info 'No running instances found. Nothing to do.'
+        return
+      end
+      ip, id = @db_helper.instance_details
+      @logger.info("Stopping instance #{ip} | #{id}.")
+      @aws_helper.stop_ec2(id)
+    end
+
     def terminate_instance
+      unless @db_helper.instance_exists?
+        @logger.info 'No running instances found. Nothing to do.'
+        return
+      end
       ip, id = @db_helper.instance_details
       @logger.info("Terminating instance #{ip} | #{id}.")
       @aws_helper.terminate_ec2(id)

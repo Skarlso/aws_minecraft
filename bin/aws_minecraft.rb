@@ -10,6 +10,11 @@ class AWSMineCli < Thor
     @aws_mine = AWSMine::AWSMine.new
   end
 
+  desc 'create-instance', 'Creates an EC2 instance.'
+  def create_instance
+    @aws_mine.create_instance
+  end
+
   desc 'start-instance', 'Starts an EC2 instance.'
   def start_instance
     @aws_mine.start_instance
@@ -17,6 +22,12 @@ class AWSMineCli < Thor
 
   desc 'stop-instance', 'Stops an EC2 instance.'
   def stop_instance
+    @aws_mine.stop_instance
+  end
+
+  desc 'terminate-instance', 'Terminates an EC2 instance.'
+  def terminate_instance
+    @aws_mine.terminate_instance
   end
 
   desc 'ssh', 'SSH into a running EC2 instance.'
