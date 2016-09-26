@@ -53,6 +53,11 @@ class AWSMineCli < Thor
   def upload_world
   end
 
+  desc 'upload-files', 'Uploads everything from drop, not just the world.'
+  def upload_files
+    @aws_mine.upload_files
+  end
+
   desc 'init-db', 'Initialize the databse.'
   def init_db
     @aws_mine.init_db

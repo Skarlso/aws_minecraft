@@ -2,9 +2,11 @@ require 'json'
 require 'aws-sdk'
 require 'logger'
 require_relative 'mine_config'
+require 'base64'
 
 module AWSMine
   # Main wrapper for AWS commands
+  # rubocop:disable Metrics/ClassLength
   class AWSHelper
     def initialize
       # region: AWS_REGION
@@ -17,6 +19,7 @@ module AWSMine
       @logger.level = Logger.const_get(config.loglevel)
     end
 
+    # rubocop:disable Metrics/MethodLength
     def create_ec2
       @logger.info('Creating new EC2 instance.')
       config = File.open(File.join(__dir__, '../../cfg/ec2_conf.json'),
@@ -29,6 +32,10 @@ module AWSMine
       @logger.info('Creating security group.')
       sg_id = create_security_group
       ec2_config[:security_group_ids] = [sg_id]
+      user_data = File.open(File.join(__dir__, '../../cfg/user_data.sh'),
+                            'rb', &:read).chop
+      encoded_user_data = Base64.encode64(user_data)
+      ec2_config[:user_data] = encoded_user_data
       @logger.info('Creating instance.')
       instance = @ec2_resource.create_instances(ec2_config)[0]
       @logger.info('Instance created. Waiting for it to become available.')

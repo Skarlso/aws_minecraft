@@ -1,5 +1,6 @@
 require 'aws_minecraft/aws_helper'
 require 'aws_minecraft/db_helper'
+require 'aws_minecraft/upload_helper'
 require 'aws_minecraft/mine_config'
 require 'net/ssh'
 require 'logger'
@@ -10,6 +11,7 @@ module AWSMine
     def initialize
       @aws_helper = AWSHelper.new
       @db_helper = DBHelper.new
+      @upload_helper = UploadHelper.new
       @logger = Logger.new(STDOUT)
       @logger.level = Logger.const_get(MineConfig.new.loglevel)
     end
@@ -63,6 +65,14 @@ module AWSMine
       @logger.info 'Creating db.'
       @db_helper.init_db
       @logger.info 'Done.'
+    end
+
+    def upload_world
+    end
+
+    def upload_files
+      ip, = @db_helper.instance_details
+      @upload_helper.upload_files(ip)
     end
 
     def remote_exec(cmd)
