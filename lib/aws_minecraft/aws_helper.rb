@@ -32,10 +32,7 @@ module AWSMine
       @logger.info('Creating security group.')
       sg_id = create_security_group
       ec2_config[:security_group_ids] = [sg_id]
-      user_data = File.open(File.join(__dir__, '../../cfg/user_data.sh'),
-                            'rb', &:read).chop
-      encoded_user_data = Base64.encode64(user_data)
-      ec2_config[:user_data] = encoded_user_data
+      ec2_config[:user_data] = retrieve_user_data
       @logger.info('Creating instance.')
       instance = @ec2_resource.create_instances(ec2_config)[0]
       @logger.info('Instance created. Waiting for it to become available.')
@@ -121,8 +118,8 @@ module AWSMine
     end
 
     def import_keypair
-      key = File.open(File.join(__dir__, '../../cfg/minecraft.key'),
-                      'rb', &:read).chop
+      key = Base64.decode64(File.open(File.join(__dir__, '../../cfg/minecraft.key'),
+                                      'rb', &:read).chop)
       begin
         @ec2_client.describe_key_pairs(key_names: ['minecraft_keys'])
         key_exists = true
@@ -150,6 +147,12 @@ module AWSMine
         @logger.info('Security Group already exists. Returning id.')
         @ec2_resource.security_groups(group_names: ['mine_group']).first.id
       end
+    end
+
+    def retrieve_user_data
+      user_data = File.open(File.join(__dir__, '../../cfg/user_data.sh'),
+                            'rb', &:read).chop
+      Base64.encode64(user_data)
     end
   end
 end
