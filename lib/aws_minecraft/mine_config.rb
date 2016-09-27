@@ -8,6 +8,7 @@ module AWSMine
       config = YAML.load_file(File.join(__dir__, '../../cfg/config.yml'))
       @loglevel = config['loglevel']
       @profile = ENV.fetch('AWS_DEFAULT_PROFILE', 'default')
+      # Upload path is used so files can sit anywhere.
       @upload_path = config['upload_path']
     end
   end

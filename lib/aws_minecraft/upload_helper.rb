@@ -13,8 +13,10 @@ module AWSMine
     def upload_files(ip)
       Net::SCP.start(ip, 'ec2-user') do |scp|
         scp.upload!(@config.upload_path,
-                    '/home/ec2-user/',
-                    :recursive)
+                    '/home/ec2-user/data',
+                    recursive: true) do |_, name, sent, total|
+          @logger.info("#{name}: #{sent}/#{total}")
+        end
       end
     end
   end

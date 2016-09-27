@@ -37,8 +37,10 @@ class AWSMineCli < Thor
   end
 
   # Handle minecraft server version here.
-  desc 'start-server', 'Starts a minecraft server.'
-  def start_server
+  desc 'start-server NAME', 'Starts a minecraft server.'
+  def start_server(name = 'minecraft_server.jar')
+    @aws_mine.remote_exec('cd /home/ec2-user && echo eula=true > eula.txt ' \
+                          "&& java -jar #{name}")
   end
 
   desc 'stop-server', 'Stops a minecraft server.'
