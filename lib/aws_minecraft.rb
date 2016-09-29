@@ -79,7 +79,7 @@ module AWSMine
     def attach_to_server
       @logger.info("Attaching to server: #{MINECRAFT_SESSION_NAME}.")
       ip, = @db_helper.instance_details
-      @aws_helper.attach_to_server(ip)
+      exec("ssh ec2-user@#{ip} -t 'cd /home/ec2-user && ./tmux-2.2/tmux attach -t #{MINECRAFT_SESSION_NAME}'")
     end
 
     def init_db
@@ -98,7 +98,6 @@ module AWSMine
 
     def remote_exec(cmd)
       ip, = @db_helper.instance_details
-      @logger.info("SSH-ing into: #{ip}.")
       @aws_helper.remote_exec(ip, cmd)
     end
 
