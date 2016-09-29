@@ -93,31 +93,6 @@ module AWSMine
       instance.state.name
     end
 
-    def remote_exec(host, cmd)
-      @logger.debug("Executing '#{cmd}' on '#{host}'.")
-      # This should work if ssh key is loaded and AgentFrowarding is set to yes.
-      Net::SSH.start(host, 'ec2-user', config: true) do |ssh|
-        output = ssh.exec!(cmd)
-        @logger.info output
-      end
-    end
-
-    def stop_server(host)
-      Net::SSH.start(host, 'ec2-user', config: true) do |ssh|
-        @logger.info('Opening channel to host.')
-        ssh.open_channel do |ch|
-          ch.request_pty do |c, success|
-            unless success
-              @logger.info('Failed to request channel.')
-              raise
-            end
-            c.send_data('stop')
-            c.wait
-          end
-        end
-      end
-    end
-
     private
 
     def symbolize(obj)
