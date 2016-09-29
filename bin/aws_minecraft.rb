@@ -39,8 +39,7 @@ class AWSMineCli < Thor
   # Handle minecraft server version here.
   desc 'start-server NAME', 'Starts a minecraft server.'
   def start_server(name = 'minecraft_server.jar')
-    @aws_mine.remote_exec('cd /home/ec2-user && echo eula=true > eula.txt ' \
-                          "&& java -jar #{name}")
+    @aws_mine.start_server(name)
   end
 
   desc 'stop-server', 'Stops a minecraft server.'
@@ -49,6 +48,7 @@ class AWSMineCli < Thor
 
   desc 'attach-to-server', 'Attach to a minecraft server.'
   def attach_to_server
+    @aws_mine.attach_to_server
   end
 
   desc 'upload-world', 'Upload world.'

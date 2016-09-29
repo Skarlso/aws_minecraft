@@ -8,6 +8,7 @@ require 'logger'
 module AWSMine
   # Main class for AWS Minecraft
   class AWSMine
+    MINECRAFT_SESSION_NAME = 'minecraft'.freeze
     def initialize
       @aws_helper = AWSHelper.new
       @db_helper = DBHelper.new
@@ -63,6 +64,22 @@ module AWSMine
       @logger.info("Terminating instance #{ip} | #{id}.")
       @aws_helper.terminate_ec2(id)
       @db_helper.remove_instance
+    end
+
+    def start_server(name)
+      @logger.info("Starting server: #{name}.")
+      cmd = "cd /home/ec2-user && ./tmux-2.2/tmux new -d -s #{MINECRAFT_SESSION_NAME} " \
+            "'echo eula=true > eula.txt && java -jar data/#{name} nogui'"
+      @logger.info("Running command: '#{cmd}'")
+      remote_exec(cmd)
+      ip, = @db_helper.instance_details
+      @logger.info("Server URL is: #{ip}:25565")
+    end
+
+    def attach_to_server
+      @logger.info("Attaching to server: #{MINECRAFT_SESSION_NAME}.")
+      ip, = @db_helper.instance_details
+      @aws_helper.attach_to_server(ip)
     end
 
     def init_db

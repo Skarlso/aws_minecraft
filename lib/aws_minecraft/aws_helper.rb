@@ -96,9 +96,30 @@ module AWSMine
     def remote_exec(host, cmd)
       @logger.debug("Executing '#{cmd}' on '#{host}'.")
       # This should work if ssh key is loaded and AgentFrowarding is set to yes.
-      Net::SSH.start(host, 'ec2-user') do |ssh|
+      Net::SSH.start(host, 'ec2-user', config: true) do |ssh|
         output = ssh.exec!(cmd)
         @logger.info output
+      end
+    end
+
+    def attach_to_server(host)
+      # cmd = "cd /home/ec2-user && ./tmux-2.2/tmux attach -t #{MINECRAFT_SESSION_NAME}"
+      # This should work if ssh key is loaded and AgentFrowarding is set to yes.
+      Net::SSH.start(host, 'ec2-user', config: true) do |ssh|
+        @logger.info('Opening channel to host.')
+        ssh.open_channel do |ch|
+          ch.request_pty do |c, success|
+            unless success
+              @logger.info('Failed to request channel.')
+              raise
+            end
+            c.on_data do |c2,data|
+              puts "recieved #{data} from shell"
+            end
+            c.exec("cd /home/ec2-user && ./tmux-2.2/tmux attach -t #{AWSMine::MINECRAFT_SESSION_NAME}")
+          end
+        end
+        ssh.loop
       end
     end
 
