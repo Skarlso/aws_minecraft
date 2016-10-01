@@ -14,7 +14,7 @@ shared_examples 'with aws minecraft' do
     FakeFS do
       FileUtils.mkdir_p(File.join(__dir__, '../cfg'))
       File.open(File.join(__dir__, '../cfg/config.yml'), 'w') do |f|
-        f.puts('loglevel: INFO')
+        f.puts('loglevel: ERROR')
         f.puts('upload_path: /drop')
       end
 

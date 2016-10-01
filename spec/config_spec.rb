@@ -11,7 +11,7 @@ describe AWSMine::MineConfig do
     end
 
     it 'correctly setup variables which are loaded from the config file' do
-      expect(mineconfig.loglevel).to eq('INFO')
+      expect(mineconfig.loglevel).to eq('ERROR')
       expect(mineconfig.upload_path).to eq('/drop')
     end
   end
