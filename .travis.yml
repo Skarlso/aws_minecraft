@@ -1,2 +1,4 @@
 rvm:
   - 2.3.1
+env:
+  - AWS_REGION=eu-central-1
