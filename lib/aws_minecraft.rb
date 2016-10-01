@@ -9,6 +9,7 @@ module AWSMine
   # Main class for AWS Minecraft
   class AWSMine
     MINECRAFT_SESSION_NAME = 'minecraft'.freeze
+    attr_accessor :aws_helper, :db_helper, :upload_helper, :ssh_helper
     def initialize
       @aws_helper = AWSHelper.new
       @db_helper = DBHelper.new
