@@ -6,7 +6,6 @@ require 'base64'
 
 module AWSMine
   # Main wrapper for AWS commands
-  # rubocop:disable Metrics/ClassLength
   class AWSHelper
     def initialize
       # region: AWS_REGION

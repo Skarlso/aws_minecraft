@@ -9,6 +9,7 @@ GEM
     aws-sdk-resources (2.6.2)
       aws-sdk-core (= 2.6.2)
     diff-lcs (1.2.5)
+    fakefs (0.9.1)
     jmespath (1.3.1)
     net-scp (1.2.1)
       net-ssh (>= 2.6.5)
@@ -47,6 +48,7 @@ PLATFORMS
 
 DEPENDENCIES
   aws-sdk (~> 2)
+  fakefs
   net-scp
   net-ssh
   rake
