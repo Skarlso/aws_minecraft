@@ -1,5 +1,6 @@
-require 'fakefs/spec_helpers'
+# Require pp must be before fakefs. Otherwise there is an error:'superclass mismatch for class File'
 require 'pp'
+require 'fakefs/spec_helpers'
 
 RSpec.configure do |config|
   config.include FakeFS::SpecHelpers, fakefs: true
