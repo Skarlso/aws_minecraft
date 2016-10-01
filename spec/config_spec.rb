@@ -6,8 +6,8 @@ describe AWSMine::MineConfig do
   describe '#initialize', fakefs: true do
     before :each do
       FakeFS do
-        FileUtils.mkdir_p('/../cfg')
-        File.open('/../../cfg/config.yml', 'w') do |f|
+        FileUtils.mkdir_p(File.join(__dir__, '../cfg'))
+        File.open(File.join(__dir__, '../cfg/config.yml'), 'w') do |f|
           f.puts('loglevel: INFO')
           f.puts('upload_path: /drop')
         end
@@ -20,7 +20,8 @@ describe AWSMine::MineConfig do
     end
 
     it 'correctly setup variables which are loaded from the config file' do
-      puts mineconfig.loglevel
+      expect(mineconfig.loglevel).to eq('INFO')
+      expect(mineconfig.upload_path).to eq('/drop')
     end
   end
 end
