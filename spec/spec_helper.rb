@@ -16,9 +16,9 @@ shared_examples 'with aws minecraft' do
       Aws::EC2::Resource.new
     end
   end
+  include FakeFS::SpecHelpers
 
   before :each do
-    include FakeFS::SpecHelpers
     FakeFS.activate!
     FakeFS::FileSystem.clone(__dir__)
     FakeFS do

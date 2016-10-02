@@ -7,6 +7,11 @@ describe AWSMine::AWSHelper do
   include_context 'with aws minecraft'
   let(:ec2_client) { instance_double(Aws::EC2::Client) }
   let(:ec2_resource) { instance_double(Aws::EC2::Resource) }
+  let(:sg) { instance_double(Aws::EC2::SecurityGroup) }
+  let(:ec2) { instance_double(Aws::EC2::Instance) }
+  let(:ec2s) { instance_double(Aws::EC2::Instances) }
+  let(:client) { instance_double(Aws::Client) }
+  let(:state) { instance_double(Aws::EC2::Types::InstanceState) }
 
   subject do |s|
     s = described_class.new
@@ -22,10 +27,6 @@ describe AWSMine::AWSHelper do
   end
 
   describe '#create_ec2' do
-    let(:sg) { instance_double(Aws::EC2::SecurityGroup) }
-    let(:ec2) { instance_double(Aws::EC2::Instance) }
-    let(:ec2s) { instance_double(Aws::EC2::Instances) }
-    let(:client) { instance_double(Aws::Client) }
     it 'should create an ec2 instance' do
       expect(ec2_client).to receive(:describe_key_pairs).with(key_names: ['minecraft_keys'])
       expect(ec2_resource).to receive(:create_security_group).with(dry_run: false,
@@ -51,6 +52,47 @@ describe AWSMine::AWSHelper do
       expect(ec2_resource).to receive(:instances).with(instance_ids: ['ec2-id']).and_return([ec2])
       expect(ec2).to receive(:public_ip_address).twice.and_return('1.2.3.4')
       expect(subject.create_ec2).to eq(['1.2.3.4', 'ec2-id'])
+    end
+  end
+
+  describe '#terminate_ec2' do
+    it 'should terminate an ec2 instance' do
+      expect(ec2_client).to receive(:terminate_instances).with(dry_run: false,
+                                                               instance_ids: ['ec2-id'])
+      expect(ec2_resource).to receive(:client).and_return(client)
+      expect(client).to receive(:wait_until).with(:instance_terminated, instance_ids: ['ec2-id'])
+      subject.terminate_ec2('ec2-id')
+    end
+  end
+
+  describe '#stop_ec2' do
+    it 'should stop an ec2 instance' do
+      expect(ec2_client).to receive(:stop_instances).with(dry_run: false,
+                                                          instance_ids: ['ec2-id'])
+      expect(ec2_resource).to receive(:client).and_return(client)
+      expect(client).to receive(:wait_until).with(:instance_stopped, instance_ids: ['ec2-id'])
+      subject.stop_ec2('ec2-id')
+    end
+  end
+
+  describe '#start_ec2' do
+    it 'should start an ec2 instance' do
+      expect(ec2_client).to receive(:start_instances).with(dry_run: false,
+                                                           instance_ids: ['ec2-id'])
+      expect(ec2_resource).to receive(:client).and_return(client)
+      expect(client).to receive(:wait_until).with(:instance_running, instance_ids: ['ec2-id'])
+      expect(ec2_resource).to receive(:instances).with(instance_ids: ['ec2-id']).and_return([ec2])
+      expect(ec2).to receive(:public_ip_address).twice.and_return('1.2.3.4')
+      expect(subject.start_ec2('ec2-id')).to eq('1.2.3.4')
+    end
+  end
+
+  describe '#state' do
+    it 'should return the state of an existing instance' do
+      expect(ec2_resource).to receive(:instances).with(instance_ids: ['ec2-id']).and_return([ec2])
+      expect(ec2).to receive(:state).and_return(state)
+      expect(state).to receive(:name).and_return('running')
+      expect(subject.state('ec2-id')).to eq('running')
     end
   end
 end
