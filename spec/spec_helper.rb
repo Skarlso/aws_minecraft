@@ -1,12 +1,22 @@
 # Require pp must be before fakefs. Otherwise there is an error:'superclass mismatch for class File'
 require 'pp'
 require 'fakefs/spec_helpers'
+require 'aws-sdk'
 
 RSpec.configure do |config|
   config.include FakeFS::SpecHelpers, fakefs: true
 end
 
 shared_examples 'with aws minecraft' do
+  before(:all) do
+    # Loading metadata for AWS before FakeFS kicks in.
+    RSpec::Mocks.with_temporary_scope do
+      Aws::SharedCredentials.new
+      Aws::EC2::Client.new
+      Aws::EC2::Resource.new
+    end
+  end
+
   before :each do
     include FakeFS::SpecHelpers
     FakeFS.activate!

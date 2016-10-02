@@ -7,6 +7,7 @@ require 'base64'
 module AWSMine
   # Main wrapper for AWS commands
   class AWSHelper
+    attr_accessor :ec2_client, :ec2_resource
     def initialize
       # region: AWS_REGION
       # Credentials are loaded from environment properties
@@ -19,6 +20,7 @@ module AWSMine
     end
 
     # rubocop:disable Metrics/MethodLength
+    # rubocop:disable Metrics/AbcSize
     def create_ec2
       @logger.info('Creating new EC2 instance.')
       config = File.open(File.join(__dir__, '../../cfg/ec2_conf.json'),
