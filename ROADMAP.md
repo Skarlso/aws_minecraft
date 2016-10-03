@@ -11,6 +11,8 @@ aws_helper would be Next.
 * Everything Minecraft related could be extracted.
 * Would be nice if it wouldn't re-upload.
 * start-server doesn't tell you if starting the tmux session was successful or not.
+* World backup isn't there yet.
+ * Could be to an S3 or, even downloaded.
 
 0.1.0
 -----
