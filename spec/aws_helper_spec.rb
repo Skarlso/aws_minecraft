@@ -41,7 +41,7 @@ describe AWSMine::AWSHelper do
               key_name: 'minecraft_keys',
               min_count: 1,
               max_count: 1,
-              instance_type: 't2.nano',
+              instance_type: 't2.large',
               monitoring: { enabled: true },
               security_group_ids: ['sg-1'],
               user_data: "ICAgICAgICAgICEjL2Jpbi9iYXNo\n")
