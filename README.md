@@ -1,6 +1,8 @@
 Minecraft Server In The Cloud
 =============================
 
+[![Build Status](https://travis-ci.org/Skarlso/aws_minecraft.svg?branch=master)](https://travis-ci.org/Skarlso/aws_minecraft)
+
 This is a fully provisinable Minecraft server on a configurable EC2 instance under AWS. This Gem
 provides the ability to manage both, an EC2 instance and a Minecraft server which is executed on
 that EC2 instance.
