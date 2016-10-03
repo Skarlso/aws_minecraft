@@ -10,6 +10,7 @@ aws_helper would be Next.
 * Upload world is not working yet.
 * Everything Minecraft related could be extracted.
 * Would be nice if it wouldn't re-upload.
+* start-server doesn't tell you if starting the tmux session was successful or not.
 
 0.1.0
 -----
