@@ -30,16 +30,22 @@ module AWSMine
     def stop_server(host)
       Net::SSH.start(host, 'ec2-user', config: true) do |ssh|
         @logger.info('Opening channel to host.')
-        ssh.open_channel do |ch|
+        channel = ssh.open_channel do |ch|
+          @logger.info('Channel opened. Opening pty.')
           ch.request_pty do |c, success|
             unless success
               @logger.info('Failed to request channel.')
               raise
             end
-            c.send_data('stop')
-            c.wait
+            c.on_data do |_, data|
+              puts "Received data: #{data}."
+            end
+            c.exec("cd /home/ec2-user && ./tmux-2.2/tmux attach -t #{AWSMine::MINECRAFT_SESSION_NAME}")
+            @logger.info('Sending stop signal...')
+            c.send_data("stop\n")
           end
         end
+        channel.wait
       end
     end
   end

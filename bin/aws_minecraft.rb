@@ -44,6 +44,7 @@ class AWSMineCli < Thor
 
   desc 'stop-server', 'Stops a minecraft server.'
   def stop_server
+    @aws_mine.stop_server
   end
 
   desc 'attach-to-server', 'Attach to a minecraft server.'

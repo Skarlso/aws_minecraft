@@ -82,8 +82,8 @@ describe AWSMine::AWSMine, fakefs: true do
   describe '#start_server' do
     it 'should start a server' do
       name = 'dunny'
-      cmd = "cd /home/ec2-user && ./tmux-2.2/tmux new -d -s #{AWSMine::AWSMine::MINECRAFT_SESSION_NAME} " \
-            "'echo eula=true > eula.txt && java -jar data/#{name} nogui'"
+      cmd = "cd /home/ec2-user/data && ../tmux-2.2/tmux new -d -s #{AWSMine::AWSMine::MINECRAFT_SESSION_NAME} " \
+            "'echo eula=true > eula.txt && java -jar #{name} nogui'"
       expect(subject).to receive(:remote_exec).with(cmd)
       expect(db).to receive(:instance_details).and_return(['1.2.3.4', 'i-asdf'])
       subject.start_server(name)

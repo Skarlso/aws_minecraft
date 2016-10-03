@@ -131,6 +131,41 @@ When you are done playing, don't forget to issue a `stop-server` command.
 If you would like to resume playing on the same server, you would call `start-server` and again,
 enjoy a nice session of Minecraft.
 
+# Examples
+
+Created the instance
+
+![create](img/create.png)
+
+Creation in progress with a progress bar showing that it's working
+
+![create_in_progress](img/create_in_progress.png)
+
+Terminating an instance
+
+![terminate](img/terminate.png)
+
+Upload files
+
+![upload](img/upload.png)
+
+Attach to a running Minecraft server
+
+![attached_session](img/attached_session.png)
+
+Attach-Detach to a running session
+
+![attach_detach](img/attach-detach.png)
+
+Trying to attach to a not running session
+
+![invalid_attach](img/attach_no_session.png)
+
+Stopping a minecraft server
+
+![stop_server](img/stop_server.png)
+
 # Contribution
 
 Any contributions are very welcomed. Please don't hesitate to open an issue even if it is a question only.
+The Roadmap outlines things that are missing and would be nice to have.

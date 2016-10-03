@@ -70,12 +70,18 @@ module AWSMine
 
     def start_server(name)
       @logger.info("Starting server: #{name}.")
-      cmd = "cd /home/ec2-user && ./tmux-2.2/tmux new -d -s #{MINECRAFT_SESSION_NAME} " \
-            "'echo eula=true > eula.txt && java -jar data/#{name} nogui'"
+      cmd = "cd /home/ec2-user/data && ../tmux-2.2/tmux new -d -s #{MINECRAFT_SESSION_NAME} " \
+            "'echo eula=true > eula.txt && java -jar #{name} nogui'"
       @logger.info("Running command: '#{cmd}'")
       remote_exec(cmd)
       ip, = @db_helper.instance_details
       @logger.info("Server URL is: #{ip}:25565")
+    end
+
+    def stop_server
+      @logger.info('Stopping server')
+      ip, = @db_helper.instance_details
+      @ssh_helper.stop_server(ip)
     end
 
     def attach_to_server
