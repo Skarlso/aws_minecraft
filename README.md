@@ -75,7 +75,8 @@ The instance configuration that is used can be found here: [ec2_config](cfg/ec2_
 will configure and create an EC2 instance for you. Couple of things to note here. The instance uses
 an ssh key import which is than used to execute commands on the instance. So in order for this to work
 you'll have to create an SSH key with `ssh-keygen`. Enter your **PUBLIC** key, something like `/Users/youruser/.ssh/ida_rsa.pub`,
-into the file called `Minecraft.key` as a *base64* encoded string.
+into the file called `minecraft.key` as a *base64* encoded string. You can use a public encoder, since
+this is your public key. [Base64Encode](https://www.base64encode.org/).
 
 AWS Minecraft uses tmux to run a Minecraft server in the background. The tmux is a multiplexer client
 and will allow us to attach to it later on, if the user would like to run some commands on the server.
@@ -90,13 +91,13 @@ query amazon for information about the instance.
 
 The [config.yml](cfg/config.yml) file configures this gem. Currently, two settings are available. A
 Logger level setting information which can be overridden any time. And second, it's the location from
-where files will be uploaded to the instance like, Minecraft.jar or craftbukkit.jar. These than will
+where files will be uploaded to the instance like, minecraft.jar or craftbukkit.jar. These than will
 be executed during starting a Minecraft server.
 
 ### DB
 
 The database also needs to be initialised, for this, there is a cli command called init-db. To
-initialise the database, run `bundle exec ./bin/aws_Minecraft.rb init-db`. This will create a
+initialise the database, run `bundle exec ./bin/aws_minecraft.rb init-db`. This will create a
 Minecraft.db file. In case there is anything wrong and you would like to create a new instance, and
 you are sure that the one which is saved, is not the correct one, just delete this file and run
 `init-db` again.
