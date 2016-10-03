@@ -61,7 +61,7 @@ class AWSMineCli < Thor
     @aws_mine.upload_files
   end
 
-  desc 'init-db', 'Initialize the databse.'
+  desc 'init-db', 'Initialize the database.'
   def init_db
     @aws_mine.init_db
   end
