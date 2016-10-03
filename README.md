@@ -41,6 +41,34 @@ Test your CLI by running an AWS command like this one: `aws ec2 describe-instanc
 
 ## AWS Minecraft Gem
 
+### Install
+
+Version 0.1.0 is deployed as a gem.
+
+```
+gem install aws_minecraft
+```
+
+Or, in a Gemfile
+
+```
+gem 'aws_minecraft'
+```
+
+You can also build it yourself. Just clone this repository and use rake.
+
+```
+rake install
+```
+
+Or
+
+```
+bundle exec rake install
+```
+
+This will create a gem which will be used under `pkg`. Just bare in mind, that there is a key which needs to be present. The `minecraft.key` file. Without it, you won't be able to build the gem.
+
 ### Instance
 
 The instance configuration that is used can be found here: [ec2_config](cfg/ec2_config.json). This
