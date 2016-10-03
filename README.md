@@ -162,6 +162,14 @@ When you are done playing, don't forget to issue a `stop-server` command.
 If you would like to resume playing on the same server, you would call `start-server` and again,
 enjoy a nice session of Minecraft.
 
+## Using an existing server configuration with plugins
+
+If you happen to have a server with configured plugins and all that jazz, and you would like to just
+continue that on an instance, it's easy to do that. Simply point, in the config.yml file `upload_path:`
+to that folder in which your server, world, minecraft jar, craftbukkit jar, sit and upload_file will
+upload the contents of that folder to EC2. Start your minecraft jar, and log in to your old world with
+everything in tact.
+
 # Examples
 
 Created the instance
