@@ -32,6 +32,11 @@ shared_examples 'with aws minecraft' do
           !#/bin/bash
         FILE
       end
+      File.open(File.join(__dir__, '../cfg/minecraft.key'), 'w') do |f|
+        f.puts <<-FILE
+          mykey
+        FILE
+      end
     end
   end
 end
