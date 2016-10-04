@@ -19,7 +19,6 @@ aws_helper would be Next.
 
 * This is an MVP at this stage, with everything working and the most important parts have unit tests.
 
-
 0.0.4
 -----
 
