@@ -23,8 +23,7 @@ module AWSMine
     # rubocop:disable Metrics/AbcSize
     def create_ec2
       @logger.info('Creating new EC2 instance.')
-      config = File.open(File.join(__dir__, '../../cfg/ec2_conf.json'),
-                         'rb', &:read).chop
+      config = File.read(File.join(__dir__, '../../cfg/ec2_conf.json'))
       @logger.debug("Configuration loaded: #{config}.")
       ec2_config = symbolize(JSON.parse(config))
       @logger.debug("Configuration symbolized: #{ec2_config}.")
@@ -110,8 +109,7 @@ module AWSMine
     end
 
     def import_keypair
-      key = Base64.decode64(File.open(File.join(__dir__, '../../cfg/minecraft.key'),
-                                      'rb', &:read).chop)
+      key = Base64.decode64(File.read(File.join(__dir__, '../../cfg/minecraft.key')))
       begin
         @ec2_client.describe_key_pairs(key_names: ['minecraft_keys'])
         key_exists = true
@@ -126,8 +124,7 @@ module AWSMine
     end
 
     def create_security_group
-      config = File.open(File.join(__dir__, '../../cfg/sg_config.json'),
-                         'rb', &:read).chop
+      config = File.read(File.join(__dir__, '../../cfg/sg_config.json'))
       sg_config = symbolize(JSON.parse(config))
       begin
         sg = @ec2_resource.create_security_group(dry_run: false,
@@ -142,8 +139,7 @@ module AWSMine
     end
 
     def retrieve_user_data
-      user_data = File.open(File.join(__dir__, '../../cfg/user_data.sh'),
-                            'rb', &:read).chop
+      user_data = File.read(File.join(__dir__, '../../cfg/user_data.sh'))
       Base64.encode64(user_data)
     end
   end

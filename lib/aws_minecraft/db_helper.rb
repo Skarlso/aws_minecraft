@@ -19,8 +19,7 @@ module AWSMine
 
     def init_db
       @tables.each do |table|
-        sql = File.open(File.join(__dir__, "../../cfg/#{table}.sql"),
-                        'rb', &:read).chop
+        sql = File.read(File.join(__dir__, "../../cfg/#{table}.sql"))
         @db.execute sql unless table_exists? table
       end
     end

@@ -27,16 +27,8 @@ shared_examples 'with aws minecraft' do
         f.puts('loglevel: ERROR')
         f.puts('upload_path: /drop')
       end
-      File.open(File.join(__dir__, '../cfg/user_data.sh'), 'w') do |f|
-        f.puts <<-FILE
-          !#/bin/bash
-        FILE
-      end
-      File.open(File.join(__dir__, '../cfg/minecraft.key'), 'w') do |f|
-        f.puts <<-FILE
-          mykey
-        FILE
-      end
+      File.write(File.join(__dir__, '../cfg/user_data.sh'), '!#/bin/bash')
+      File.write(File.join(__dir__, '../cfg/minecraft.key'), 'mykey')
     end
   end
 end

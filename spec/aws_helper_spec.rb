@@ -44,7 +44,7 @@ describe AWSMine::AWSHelper do
               instance_type: 't2.large',
               monitoring: { enabled: true },
               security_group_ids: ['sg-1'],
-              user_data: "ICAgICAgICAgICEjL2Jpbi9iYXNo\n")
+              user_data: "ISMvYmluL2Jhc2g=\n")
         .and_return([ec2])
       expect(ec2_resource).to receive(:client).and_return(client)
       expect(ec2).to receive(:id).exactly(4).times.and_return('ec2-id')
