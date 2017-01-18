@@ -7,7 +7,6 @@ Roadmap for aws_minecraft
 * Working on coverage is important. Adding unit tests for ssh, uploader and negative scenarios for
 aws_helper would be Next.
 * Some of the error cases are not handled really well at the moment. They just raise an error.
-* Upload world is not working yet.
 * Everything Minecraft related could be extracted.
 * Would be nice if it wouldn't re-upload.
 * start-server doesn't tell you if starting the tmux session was successful or not.
