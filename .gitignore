@@ -5,3 +5,4 @@ drop/*
 .DS_Store
 cfg/minecraft.key
 coverage
+*.gem
