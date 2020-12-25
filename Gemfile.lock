@@ -54,6 +54,10 @@ GEM
     thor (1.0.1)
     unicode-display_width (1.7.0)
 
+PLATFORMS
+  ruby
+  x86_64-darwin-20
+
 DEPENDENCIES
   aws-sdk (~> 2)
   fakefs
