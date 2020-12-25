@@ -6,7 +6,7 @@ module AWSMine
   class UploadHelper
     def initialize
       @config = MineConfig.new
-      @logger = Logger.new(STDOUT)
+      @logger = Logger.new($stdout)
       @logger.level = Logger.const_get(@config.loglevel)
     end
 

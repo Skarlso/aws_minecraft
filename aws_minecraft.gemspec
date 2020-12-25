@@ -13,20 +13,18 @@ Gem::Specification.new do |s|
   s.email = 'skarlso777@gmail.com'
   s.extra_rdoc_files = ['README.md']
   s.files = `git ls-files`.split("\n")
-  s.files << './cfg/minecraft.key'
   s.homepage = 'https://github.com/Skarlso/aws_minecraft'
   s.rdoc_options = ['--charset=UTF-8']
   s.require_paths = ['lib']
   s.rubygems_version = '2.6.6'
   s.test_files = `git ls-files`.split("\n").select { |f| f =~ /^specs/ }
-  s.rubyforge_project = 'aws_minecraft'
   s.executables = `git ls-files -- bin/*`.split("\n")
                                          .map { |f| File.basename(f) }
   s.licenses    = ['MIT']
 
   # dependencies
+  s.add_development_dependency 'bundler'
   s.add_development_dependency 'code_stats'
   s.add_development_dependency 'rake'
   s.add_development_dependency 'rspec'
-  s.add_development_dependency 'bundler'
 end

@@ -10,12 +10,13 @@ module AWSMine
   class AWSMine
     MINECRAFT_SESSION_NAME = 'minecraft'.freeze
     attr_accessor :aws_helper, :db_helper, :upload_helper, :ssh_helper
+
     def initialize
       @aws_helper = AWSHelper.new
       @db_helper = DBHelper.new
       @upload_helper = UploadHelper.new
       @ssh_helper = SSHHelper.new
-      @logger = Logger.new(STDOUT)
+      @logger = Logger.new($stdout)
       @logger.level = Logger.const_get(MineConfig.new.loglevel)
     end
 
