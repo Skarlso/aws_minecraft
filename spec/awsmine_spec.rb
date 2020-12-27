@@ -62,7 +62,7 @@ describe AWSMine::AWSMine, fakefs: true do
   describe '#terminate_instance' do
     it 'should terminate an instance if it exists and delete it from the db' do
       expect(db).to receive(:instance_exists?).and_return(true)
-      allow($stdin).to receive(:gets) { 'y' }
+      allow($stdin).to receive(:gets) { 'Y' }
       expect(db).to receive(:instance_details).and_return(['1.2.3.4', 'i-asdf'])
       expect(aws).to receive(:terminate_ec2).with('i-asdf')
       expect(db).to receive(:remove_instance)
