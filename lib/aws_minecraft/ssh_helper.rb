@@ -6,7 +6,7 @@ module AWSMine
   class SSHHelper
     def initialize
       config = MineConfig.new
-      @logger = Logger.new(STDOUT)
+      @logger = Logger.new($stdout)
       @logger.level = Logger.const_get(config.loglevel)
     end
 
@@ -33,10 +33,8 @@ module AWSMine
         channel = ssh.open_channel do |ch|
           @logger.info('Channel opened. Opening pty.')
           ch.request_pty do |c, success|
-            unless success
-              @logger.info('Failed to request channel.')
-              raise
-            end
+            raise 'Failed to request channel' unless success
+
             c.on_data do |_, data|
               puts "Received data: #{data}."
             end

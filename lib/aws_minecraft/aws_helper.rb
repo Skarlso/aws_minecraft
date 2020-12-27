@@ -8,6 +8,7 @@ module AWSMine
   # Main wrapper for AWS commands
   class AWSHelper
     attr_accessor :ec2_client, :ec2_resource
+
     def initialize
       # region: AWS_REGION
       # Credentials are loaded from environment properties
@@ -15,7 +16,7 @@ module AWSMine
       credentials = Aws::SharedCredentials.new(profile_name: config.profile)
       @ec2_client = Aws::EC2::Client.new(credentials: credentials)
       @ec2_resource = Aws::EC2::Resource.new(client: @ec2_client)
-      @logger = Logger.new(STDOUT)
+      @logger = Logger.new($stdout)
       @logger.level = Logger.const_get(config.loglevel)
     end
 
@@ -109,7 +110,10 @@ module AWSMine
     end
 
     def import_keypair
-      key = Base64.decode64(File.read(File.join(__dir__, '../../cfg/minecraft.key')))
+      file = File.join(__dir__, '../../cfg/minecraft.key')
+      raise 'key not found. make sure cfg/minecraft.key exists in the gem' unless File.exist?(file)
+
+      key = Base64.decode64(File.read(file))
       begin
         @ec2_client.describe_key_pairs(key_names: ['minecraft_keys'])
         key_exists = true
@@ -117,6 +121,7 @@ module AWSMine
         key_exists = false
       end
       return if key_exists
+
       resp = @ec2_client.import_key_pair(dry_run: false,
                                          key_name: 'minecraft_keys',
                                          public_key_material: key)

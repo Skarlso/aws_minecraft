@@ -14,6 +14,7 @@ module AWSMine
         SELECT name FROM sqlite_master WHERE type='table' AND name='#{table}';
       SQL
       return false if retrieved.nil? || retrieved.empty?
+
       retrieved.first.first == table
     end
 

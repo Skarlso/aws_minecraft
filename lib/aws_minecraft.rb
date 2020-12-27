@@ -62,7 +62,8 @@ module AWSMine
       @logger.info('WARNING! Terminating an instance will result in dataloss. Make ' \
                    'sure everything is backed up. Do you want to continue? (Y/n):')
       answer = $stdin.gets.chomp
-      return if answer == 'n'
+      return unless answer == 'Y'
+
       ip, id = @db_helper.instance_details
       @logger.info("Terminating instance #{ip} | #{id}.")
       @aws_helper.terminate_ec2(id)

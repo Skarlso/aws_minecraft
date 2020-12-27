@@ -13,6 +13,7 @@ Gem::Specification.new do |s|
   s.email = 'skarlso777@gmail.com'
   s.extra_rdoc_files = ['README.md']
   s.files = `git ls-files`.split("\n")
+  s.files << './cfg/minecraft.key'
   s.homepage = 'https://github.com/Skarlso/aws_minecraft'
   s.rdoc_options = ['--charset=UTF-8']
   s.require_paths = ['lib']
