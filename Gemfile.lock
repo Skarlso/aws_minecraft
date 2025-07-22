@@ -51,7 +51,7 @@ GEM
       parser (>= 2.7.1.5)
     ruby-progressbar (1.10.1)
     sqlite3 (1.4.2)
-    thor (1.0.1)
+    thor (1.4.0)
     unicode-display_width (1.7.0)
 
 PLATFORMS
